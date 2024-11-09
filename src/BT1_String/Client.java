@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -63,30 +64,13 @@ public class Client extends JFrame {
 		textField.setBounds(92, 13, 160, 34);
 		contentPane.add(textField);
 		textField.setColumns(10);
-		
-		JButton btnNewButton = new JButton("CONNECT");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton.setBounds(277, 15, 137, 34);
-		contentPane.add(btnNewButton);
 		clientSocket = new DatagramSocket();
-		btnNewButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					clientSocket = new DatagramSocket(6789);
-				} catch (SocketException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} 
-				
-			}
-			
-		});
 		
 		textArea = new JTextArea();
 		textArea.setBounds(24, 57, 389, 253);
-		contentPane.add(textArea);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		scrollPane.setBounds(24, 57, 389, 253);
+		contentPane.add(scrollPane);
 		
 		JLabel lblNewLabel_1 = new JLabel("Nhập chuỗi");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));

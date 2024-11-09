@@ -23,6 +23,7 @@ public class Server extends JFrame {
 	private JPanel contentPane;
     private JTextField textField;
     private JTextArea textArea;
+    private DatagramSocket serverSocket;
 	/**
 	 * Launch the application.
 	 */
@@ -97,25 +98,34 @@ public class Server extends JFrame {
         contentPane.add(btnNewButton);
         
         btnNewButton.addActionListener(new ActionListener() {
+        	
             @Override
             public void actionPerformed(ActionEvent e) {
                 int port = Integer.parseInt(textField.getText());
+
+
+                if (serverSocket != null && !serverSocket.isClosed()) {
+                    serverSocket.close();
+                    textArea.append("\n Đóng socket cũ trước khi khởi động lại.");
+                }
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        try (DatagramSocket serverSocket = new DatagramSocket(port)) {
-                            textArea.append("Server is started \n");
+                        try {
+                            serverSocket = new DatagramSocket(port);
+                            textArea.append("\n Server is started");
                             while (true) {
                                 byte[] receiveData = new byte[65507];
                                 byte[] sendData = new byte[65507];
                                 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                                 serverSocket.receive(receivePacket);
                                 String request = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                                textArea.append("Server nhận chuỗi:"+request);
+                                textArea.append("\nServer nhận chuỗi: " + request);
                                 InetAddress clientIPAddress = receivePacket.getAddress();
                                 int clientPort = receivePacket.getPort();
 
-                                String message =  "Chu hoa: " + request.toUpperCase() + "\n" +
+                                String message = "Chu hoa: " + request.toUpperCase() + "\n" +
                                         "Chu thuong: " + request.toLowerCase() + "\n" +
                                         "Chu vua hoa vua thuong: " + swapCase(request) + "\n" +
                                         "Chuoi dao nguoc: " + new StringBuilder(request).reverse() + "\n" +
